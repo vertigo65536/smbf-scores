@@ -1,0 +1,123 @@
+<div style="width: 270px">
+        {% if secret == none %}
+                <form id="secret_form" action"{% url 'home' %}" method="post">{% csrf_token %}
+                        <label>Enter Secret</label>
+                        <input type="text" id="secret" name="secret"/>
+                        <input type="submit" value="Submit"/>
+                </form>
+        {% else %}
+                <form id="match_info" action="{% url 'home' %}" method="post" autocomplete="off">{% csrf_token %}
+                        <input type="text" id="slug" name="slug" value="{{slug}}" placeholder="Startgg Slug"></input>
+                        <input type="hidden" id="secret" name="secret" value="{{secret}}"/>
+                        <input type="submit" value="Submit"></input>
+                        <br/>
+                        {% if event_list.items %}
+                                <label>Select Event</label>
+                                <select id="event" name="event">
+                                        <option value="bad">--Select Event--</option>
+                                        {% for key, value in event_list.items %}
+                                        <option value="{{value}}" {%if value == selected_event%}selected{%endif%}>{{key}}</option>
+                                        {% endfor %}
+                                </select>
+                                <br />
+                                <label>Select Match</label>
+                                <select id="match" name="match">
+                                        <option value="bad">--Select Match--</option>
+                                        {% if set_list.items %}
+                                                {% for key in set_list.keys %}
+                                                        <option value="{{key}}">{{key}}</option>
+                                                {% endfor %}
+                                        {% endif %}
+                                </select>
+                        {%endif%}
+                </form>
+                <input type="text" id="p1Team" placeholder="Team" style="width: 50px"/>
+                <input type="text" id="p1Name" placeholder="Name"/>
+                <br />
+                <input type="text" id="p2Team" placeholder="Team" style="width: 50px"/>
+                <input type="text" id="p2Name" placeholder="Name"/>
+                <br/>
+                <label>P1 Score</label>
+                <input type="number" id="p1Score" style="width: 40px" value=0 />
+                <label>P2 Score</label>
+                <input type="number" id="p2Score" style="width: 40px" value=0 />
+                <br/>
+                <label>Center Text</label>
+                <input type="text" id="centerText"></input>
+                <br/>
+                <input type="hidden" id="game"/>
+                <button id="swap">Swap</button>
+                <button id="update" >Update Score</button>
+                <br />
+                <a href="{% url 'view' %}?s={{secret}}", target="_blank">View Overlay</a>
+                <script type="text/javascript"> 
+                        document.getElementById("event").addEventListener("change", function() {
+                                if (this.value != 'bad') {
+                                        const form = document.getElementById("match_info");
+                                        form.submit();
+                                }
+                        });
+                        var set_list = JSON.parse('{{set_list_json|safe}}');
+                        document.getElementById("match").addEventListener("change", function() {
+                                const value = document.getElementById("match").value;
+                                if (value != 'bad') {
+                                        document.getElementById("p1Team").value = set_list[value]['p1Prefix'];
+                                        document.getElementById("p1Name").value = set_list[value]['p1Name'];
+                                        document.getElementById("p2Team").value = set_list[value]['p2Prefix'];
+                                        document.getElementById("p2Name").value = set_list[value]['p2Name'];
+                                        document.getElementById("centerText").value = set_list[value]['roundText'];
+                                        document.getElementById("game").value = set_list[value]['game'];
+                                }
+                        });
+                        document.getElementById("swap").addEventListener("click", function() {
+                                var p1team = document.getElementById("p1Team").value;
+                                var p1name = document.getElementById("p1Name").value;
+                                var p2team = document.getElementById("p2Team").value;
+                                var p2name = document.getElementById("p2Name").value;
+                                document.getElementById("p1Team").value = p2team;
+                                document.getElementById("p1Name").value = p2name;
+                                document.getElementById("p2Team").value = p1team;
+                                document.getElementById("p2Name").value = p1name;
+                        });
+                        document.getElementById("update").addEventListener("click", updateScores);
+                        document.getElementById("p1Score").addEventListener("input", updateScores);
+                        document.getElementById("p2Score").addEventListener("input", updateScores);
+                        function updateScores() {
+                                var postData = {'secret': "{{secret}}"}
+                                const elements = {
+                                        "p1_tag": "p1Team",
+                                        "p1_name": "p1Name",
+                                        "p2_tag": "p2Team",
+                                        "p2_name": "p2Name",
+                                        "p1_score": "p1Score",
+                                        "p2_score": "p2Score",
+                                        "center_text": "centerText",
+                                        "game": "game"
+                                };
+                                for (const [key, value] of Object.entries(elements)) {
+                                        postData[key] = document.getElementById(value).value;
+                                }
+                                if (postData['p1_score'] == "") {
+                                        postData['p1_score'] = 0;
+                                }
+                                if (postData['p2_score'] == "") {
+                                        postData['p2_score'] = 0;
+                                }
+                                console.log(postData);
+                                fetch("{% url 'updatescores'%}", {
+                                        method: "POST",
+                                        headers: {
+                                                'Accept': 'application/json',
+                                                'X-CSRFToken': '{{csrf_token}}',
+                                                'Content-Type': 'application/json'
+                                        },
+                                        //data: JSON.stringify(postData)
+                                        body: JSON.stringify(postData),
+                                })
+                                .then( (response) => {
+                                        console.log(response);
+                                });
+                        };
+                </script>
+        {%endif%}
+</div>

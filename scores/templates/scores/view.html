@@ -1,0 +1,57 @@
+{% load static %}
+<head>
+        <link rel="stylesheet" href="{% static 'css/view_master.css'%}?{%now "U"%}">
+        <link rel="stylesheet" href="{% static 'css/view_sf6.css'%}?{%now "U"%}">
+</head>
+<body>
+<div id="wrapper">
+        <div class="p1 fullblock">
+                <div class="p1 nameblock">
+                        <div class="p1scoretext">
+                                <table>
+                                        <tr>
+                                                <td class="p1 text prefix" id="p1prefix"></td>
+                                                <td class="p1 text name" id="p1name" ></td>
+                                        </tr>
+                                </table>
+                        </div>
+                </div>
+                <div class="p1 scoreblock">
+                        <p class="p1 text score" id="p1score"></p>
+                </div>
+        </div>
+        <div class="centertextblock">
+                <p id="centertext"></p>
+        </div>
+        <div class="p2 fullblock">
+                <div class="scoreblock p2scoreblock" style="width: 5%;">
+                        <p class="p2 text score" id="p2score"></p>
+                </div>
+                <div class="nameblock p2nameblock">
+                        <div class="p2scoretext">
+                                <table style="padding: 20px; float: left;">
+                                        <tr>
+                                                <td class="p2 text prefix" id="p2prefix"></td>
+                                                <td class="p2 text name" id="p2name" ></td>
+                                        </tr>
+                                </table>
+                        </div>
+               
+                </div>
+        </div>
+</div>
+</body>
+<script>
+        setInterval(() => fetch("{% url 'rawview' %}?s={{secret}}")
+                .then(result => result.json())
+                .then((output) => {
+                        document.getElementById("p1name").innerHTML = output['p1_name'];
+                        document.getElementById("p2name").innerHTML = output['p2_name'];
+                        document.getElementById("p1prefix").innerHTML = output['p1_tag'];
+                        document.getElementById("p2prefix").innerHTML = output['p2_tag'];
+                        document.getElementById("p1score").innerHTML = output['p1_score'];
+                        document.getElementById("p2score").innerHTML = output['p2_score'];
+                        document.getElementById("centertext").innerHTML = output['center_text'];
+
+                }), 1000);
+</script>

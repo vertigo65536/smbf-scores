@@ -1,0 +1,39 @@
+@font-face {
+        font-family: Interceptor;
+        src: url('/static/fonts/Interceptor/Interceptor.otf') format("opentype");
+}
+body {
+        font-family: Interceptor;
+}
+#wrapper {
+        position:absolute;
+        left:0;
+        top:0;
+        bottom:0;
+        right:0;
+        width:1920px;
+}
+.nameblock {
+        background: black;
+        opacity: 95%;
+}
+.prefix {
+        color: red;
+}
+.name {
+        color: white;
+}
+.text {
+        opacity: 100%;
+}
+.scoreblock {
+        background: red;
+}
+.score{
+        color: black;
+}
+.centertextblock {
+        font-size: 10px;
+        background: black;
+        opacity: 95%;
+}
