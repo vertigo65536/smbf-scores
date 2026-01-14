@@ -1,0 +1,20 @@
+.centertextblock{
+        height: 35px !important;
+        margin: 0 34% 0 34% !important;
+}
+.fullblock {
+        height: 74px !important;
+        width: 550px !important;
+}
+.p1.fullblock {
+        -webkit-transform: skew(40deg);
+}
+.p2.fullblock {
+        -webkit-transform: skew(-40deg);
+}
+.p1.text {
+        -webkit-transform: skew(-40deg);
+}
+.p2.text {
+        -webkit-transform: skew(40deg);
+}

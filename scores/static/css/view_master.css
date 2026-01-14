@@ -14,9 +14,21 @@ body {
         width:1920px;
 }
 .nameblock {
+        display: flex;
         background: black;
         opacity: 95%;
+        flex: 1;
+        padding-left: 17px;
+        padding-right: 17px;
+        align-items: center;
 }
+.p1.nameblock{
+        justify-content: right;
+}
+.p2.nameblock{
+        justify-content: right;
+}
+
 .prefix {
         color: red;
 }
@@ -26,14 +38,57 @@ body {
 .text {
         opacity: 100%;
 }
+.p1.text {
+        margin: auto;
+}
+.p2.text {
+        margin: auto;
+}
+
 .scoreblock {
         background: red;
+        display:flex;
+        flex: 1;
+        max-width: 70px;
+        align-items: center;
 }
 .score{
         color: black;
+        display: flex;
 }
 .centertextblock {
         font-size: 10px;
         background: black;
         opacity: 95%;
+        position:absolute;
+        top: 0;
+        left:0;
+        right:0;
+        height: 25px;
+        z-index: 1;
+        margin: 0 35% 0 35%;
+        line-height: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+}
+.fullblock {
+        height: 60px;
+        width:600px;
+        text-align: center;
+        position:absolute;
+        top: 0;
+        z-index: 3;
+        display: flex;
+}
+.p1.fullblock {
+        left: 7.4%;
+}
+.p2.fullblock {
+        right:7.4%;
+}
+#centertext {
+        position: static;
+        color: white;
 }

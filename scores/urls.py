@@ -6,4 +6,6 @@ urlpatterns = [
     path("view/", views.view, name="view"),
     path("rawview/", views.rawview, name="rawview"),
     path("updatescores/", views.updatescores, name="updatescores"),
+    path("getslug/", views.getslug, name="getslug"),
+    path("getsets/", views.getsets, name="getsets"),
 ]

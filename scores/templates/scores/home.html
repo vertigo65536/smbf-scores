@@ -6,31 +6,22 @@
                         <input type="submit" value="Submit"/>
                 </form>
         {% else %}
-                <form id="match_info" action="{% url 'home' %}" method="post" autocomplete="off">{% csrf_token %}
-                        <input type="text" id="slug" name="slug" value="{{slug}}" placeholder="Startgg Slug"></input>
-                        <input type="hidden" id="secret" name="secret" value="{{secret}}"/>
-                        <input type="submit" value="Submit"></input>
-                        <br/>
-                        {% if event_list.items %}
-                                <label>Select Event</label>
-                                <select id="event" name="event">
-                                        <option value="bad">--Select Event--</option>
-                                        {% for key, value in event_list.items %}
-                                        <option value="{{value}}" {%if value == selected_event%}selected{%endif%}>{{key}}</option>
-                                        {% endfor %}
-                                </select>
-                                <br />
-                                <label>Select Match</label>
-                                <select id="match" name="match">
-                                        <option value="bad">--Select Match--</option>
-                                        {% if set_list.items %}
-                                                {% for key in set_list.keys %}
-                                                        <option value="{{key}}">{{key}}</option>
-                                                {% endfor %}
-                                        {% endif %}
-                                </select>
-                        {%endif%}
-                </form>
+                <h2 id="error" style="color: red;"></h2>
+                <input type="text" id="slug" name="slug" value="{{slug}}" placeholder="Startgg Slug"></input>
+                <input type="hidden" id="secret" name="secret" value="{{secret}}"/>
+                <input id="submit_slug" type="button" value="Submit"></input>
+                <br/>
+                <label>Select Event</label>
+                <select id="event" name="event">
+                        <option value="bad">--Waiting for slug--</option>
+                </select>
+                <br />
+                <label>Select Match</label>
+                <select id="match" name="match">
+                        <option value="bad">--Waiting for event--</option>
+                </select>
+                <input type="hidden" id="matchData"></input>
+                <br/>
                 <input type="text" id="p1Team" placeholder="Team" style="width: 50px"/>
                 <input type="text" id="p1Name" placeholder="Name"/>
                 <br />
@@ -45,20 +36,56 @@
                 <label>Center Text</label>
                 <input type="text" id="centerText"></input>
                 <br/>
-                <input type="hidden" id="game"/>
+                <input type="hidden" id="game" value="{{ set_list.meta.game }}">{{ set_list.meta.game}}</input>
                 <button id="swap">Swap</button>
                 <button id="update" >Update Score</button>
                 <br />
                 <a href="{% url 'view' %}?s={{secret}}", target="_blank">View Overlay</a>
-                <script type="text/javascript"> 
+                <script type="text/javascript">
+                        document.getElementById("submit_slug").addEventListener("click", function() {
+                                const slug = document.getElementById("slug").value
+                                fetch('{% url "getslug" %}?s='.concat(slug))
+                                .then(result => result.json())
+                                .then((output) => {
+                                        let option_options = document.getElementById("event").options;
+                                        for (i = option_options.length-1; i>= 0; i--) {
+                                                option_options.remove(i)
+                                        }
+                                        var i = 0;
+                                        option_options[i] = new Option("--Select Event--", "bad");
+                                        for (const [key, value] of Object.entries(output)) {
+                                                i = i+1;
+                                                value_string = String(value["id"]).concat(",").concat(value['game']);
+                                                option_options[i] = new Option(key, value_string);
+                                         }
+                                })
+                        });
                         document.getElementById("event").addEventListener("change", function() {
-                                if (this.value != 'bad') {
-                                        const form = document.getElementById("match_info");
-                                        form.submit();
+                                if (document.getElementById("event").value != "bad") {
+                                        const event_data = document.getElementById("event").value.split(",");
+                                        document.getElementById("game").value = event_data[1];
+                                        fetch('{% url "getsets" %}?e='.concat(event_data[0]))
+                                        .then(result => result.json())
+                                        .then((output) => {
+                                                console.log(output);
+                                                let option_options = document.getElementById("match").options;
+                                                for (i = option_options.length-1; i>= 0; i--) {
+                                                        option_options.remove(i)
+                                                }
+                                                var i = 0;
+                                                option_options[i] = new Option("--Select Match--", "bad");
+                                                for (const [key, value] of Object.entries(output)) {
+                                                        i = i+1;
+                                                        option_options[i] = new Option(key, key);
+                                                }
+                                                document.getElementById("matchData").value = JSON.stringify(output);
+                                        });
+
                                 }
                         });
-                        var set_list = JSON.parse('{{set_list_json|safe}}');
                         document.getElementById("match").addEventListener("change", function() {
+                                const json_data = document.getElementById("matchData").value;
+                                const set_list = JSON.parse(json_data);
                                 const value = document.getElementById("match").value;
                                 if (value != 'bad') {
                                         document.getElementById("p1Team").value = set_list[value]['p1Prefix'];
@@ -66,8 +93,8 @@
                                         document.getElementById("p2Team").value = set_list[value]['p2Prefix'];
                                         document.getElementById("p2Name").value = set_list[value]['p2Name'];
                                         document.getElementById("centerText").value = set_list[value]['roundText'];
-                                        document.getElementById("game").value = set_list[value]['game'];
                                 }
+                                updateScores();
                         });
                         document.getElementById("swap").addEventListener("click", function() {
                                 var p1team = document.getElementById("p1Team").value;
@@ -97,6 +124,7 @@
                                 for (const [key, value] of Object.entries(elements)) {
                                         postData[key] = document.getElementById(value).value;
                                 }
+                                console.log(postData)
                                 if (postData['p1_score'] == "") {
                                         postData['p1_score'] = 0;
                                 }
@@ -111,7 +139,6 @@
                                                 'X-CSRFToken': '{{csrf_token}}',
                                                 'Content-Type': 'application/json'
                                         },
-                                        //data: JSON.stringify(postData)
                                         body: JSON.stringify(postData),
                                 })
                                 .then( (response) => {
