@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.forms.models import model_to_dict
-from .models import Secret, Score
+from .models import Secret, Score, GameStyle
 import pystartgg
 import json
 
@@ -18,6 +18,10 @@ def view(request):
 def rawview(request):
     secret = request.GET.get("s")
     query = model_to_dict(Score.objects.get(secret=secret))
+    try:
+        query['style'] = model_to_dict(GameStyle.objects.get(game=query['game']))['style']
+    except:
+        query['style'] = -1
     score_json = json.dumps(query)
     return HttpResponse(score_json, content_type="application/json")
 
@@ -43,8 +47,9 @@ def getsets(request):
     if sets != None:
         set_list = {}
         for match in sets:
-            if match['state'] not in [1,2]:
+            if match['state'] not in [1,2] or match['p1name'] == None or match['p2name'] == None:
                 continue
+            print(match)
             set_list[match['p1name'] + " vs " + match['p2name']] = {
                     'p1Prefix': match['p1prefix'],
                     'p1Name': match['p1name'],

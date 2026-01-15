@@ -3,6 +3,7 @@
         src: url('/static/fonts/Interceptor/Interceptor.otf') format("opentype");
 }
 body {
+        overflow-y: hidden;
         font-family: Interceptor;
 }
 #wrapper {
@@ -12,21 +13,22 @@ body {
         bottom:0;
         right:0;
         width:1920px;
+        transition: transform .5s ease-in-out;
 }
 .nameblock {
         display: flex;
         background: black;
         opacity: 95%;
         flex: 1;
-        padding-left: 17px;
-        padding-right: 17px;
         align-items: center;
+        position:relative;
+        overflow: hidden;
 }
 .p1.nameblock{
         justify-content: right;
 }
 .p2.nameblock{
-        justify-content: right;
+        justify-content: left;
 }
 
 .prefix {
@@ -37,6 +39,7 @@ body {
 }
 .text {
         opacity: 100%;
+        font-size: 25px;
 }
 .p1.text {
         margin: auto;
@@ -51,6 +54,8 @@ body {
         flex: 1;
         max-width: 70px;
         align-items: center;
+        position: relative;
+        overflow: hidden;
 }
 .score{
         color: black;
@@ -75,12 +80,13 @@ body {
 }
 .fullblock {
         height: 60px;
-        width:600px;
+        width:0px;
         text-align: center;
-        position:absolute;
+        position: absolute;
         top: 0;
         z-index: 3;
         display: flex;
+        transition: width 0.5s ease-in-out;
 }
 .p1.fullblock {
         left: 7.4%;
@@ -91,4 +97,24 @@ body {
 #centertext {
         position: static;
         color: white;
+}
+.moveup {
+        transform: translateY(-200px);
+}
+.up {
+        transform: translateY(-200px);
+}
+.grow {
+        width: 600px;
+        transition-delay: 0.5s;
+}
+.shrink {
+        width: 0px;
+        /*transition: none;*/
+        transition-delay: 0.3s;
+}
+
+.nametable {
+        padding-left: 17px;
+        padding-right: 17px;
 }

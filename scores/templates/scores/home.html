@@ -38,7 +38,8 @@
                 <br/>
                 <input type="hidden" id="game" value="{{ set_list.meta.game }}">{{ set_list.meta.game}}</input>
                 <button id="swap">Swap</button>
-                <button id="update" >Update Score</button>
+                <button id="update" >Update</button>
+                <button id="refresh">Refresh Matches</button>
                 <br />
                 <a href="{% url 'view' %}?s={{secret}}", target="_blank">View Overlay</a>
                 <script type="text/javascript">
@@ -60,7 +61,9 @@
                                          }
                                 })
                         });
-                        document.getElementById("event").addEventListener("change", function() {
+                        document.getElementById("event").addEventListener("change", updateMatches);
+                        document.getElementById("refresh").addEventListener("click", updateMatches);
+                        function updateMatches() {
                                 if (document.getElementById("event").value != "bad") {
                                         const event_data = document.getElementById("event").value.split(",");
                                         document.getElementById("game").value = event_data[1];
@@ -82,7 +85,7 @@
                                         });
 
                                 }
-                        });
+                        }
                         document.getElementById("match").addEventListener("change", function() {
                                 const json_data = document.getElementById("matchData").value;
                                 const set_list = JSON.parse(json_data);

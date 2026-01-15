@@ -17,5 +17,7 @@
 }
 .fullblock {
         height: 60px !important;
-        width: 600px !important;;
+}
+.grow {
+        width: 600px !important;
 }

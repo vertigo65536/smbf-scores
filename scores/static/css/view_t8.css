@@ -4,7 +4,6 @@
 }
 .fullblock {
         height: 74px !important;
-        width: 550px !important;
 }
 .p1.fullblock {
         -webkit-transform: skew(40deg);
@@ -17,4 +16,7 @@
 }
 .p2.text {
         -webkit-transform: skew(40deg);
+}
+.grow {
+        width: 550px !important;
 }

@@ -15,3 +15,7 @@ class Score(models.Model):
     p2_score = models.IntegerField()
     center_text = models.CharField(max_length=100)
     game = models.CharField(max_length=100)
+
+class GameStyle(models.Model):
+    game = models.IntegerField(primary_key=True)
+    style = models.CharField(max_length=300)

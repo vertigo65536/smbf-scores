@@ -1,13 +1,13 @@
 {% load static %}
 <head>
         <link rel="stylesheet" href="{% static 'css/view_master.css'%}?{%now "U"%}">
-        <link rel="stylesheet" href="{% static 'css/view_sf6.css'%}?{%now "U"%}">
+        <link id="customstyle" rel="stylesheet" href="">
 </head>
 <body>
-<div id="wrapper">
+<div id="wrapper" class="up">
         <div class="p1 fullblock">
                 <div class="p1 nameblock">
-                        <table>
+                        <table class="nametable">
                                 <tr>
                                         <td class="p1 text prefix" id="p1prefix"></td>
                                         <td class="p1 text name" id="p1name" ></td>
@@ -26,7 +26,7 @@
                         <p class="p2 text score" id="p2score"></p>
                 </div>
                 <div class="nameblock p2nameblock">
-                        <table>
+                        <table class="nametable">
                                 <tr>
                                         <td class="p2 text prefix" id="p2prefix"></td>
                                         <td class="p2 text name" id="p2name" ></td>
@@ -35,18 +35,65 @@
                 </div>
         </div>
 </div>
+<input type="hidden" id="scorecache" value="{}"></input>
 </body>
 <script>
         setInterval(() => fetch("{% url 'rawview' %}?s={{secret}}")
                 .then(result => result.json())
                 .then((output) => {
-                        document.getElementById("p1name").innerHTML = output['p1_name'];
-                        document.getElementById("p2name").innerHTML = output['p2_name'];
-                        document.getElementById("p1prefix").innerHTML = output['p1_tag'];
-                        document.getElementById("p2prefix").innerHTML = output['p2_tag'];
-                        document.getElementById("p1score").innerHTML = output['p1_score'];
-                        document.getElementById("p2score").innerHTML = output['p2_score'];
-                        document.getElementById("centertext").innerHTML = output['center_text'];
-
+                        const cache_json = document.getElementById("scorecache").value;
+                        var cache = JSON.parse(cache_json);
+                        output_json = JSON.stringify(output);
+                        if (output_json != cache) {
+                                if (cache_json != "{}") {
+                                        var animation_check = 1
+                                        for (const[key,value] of Object.entries(output)){
+                                                if (cache[key] != value) {
+                                                        if (key != 'p1_score' && key !='p2_score') {
+                                                                animation_check = 2;
+                                                        }
+                                                }
+                                        }
+                                        if (animation_check == 2) {
+                                                animateTextChange(output);
+                                        } else {
+                                                updateScores(output);
+                                        }
+                                } else {
+                                        updateScores(output);
+                                }
+                        }
                 }), 1000);
+        function updateScores(output) {
+                document.getElementById("p1name").innerHTML = output['p1_name'];
+                document.getElementById("p2name").innerHTML = output['p2_name'];
+                document.getElementById("p1prefix").innerHTML = output['p1_tag'];
+                document.getElementById("p2prefix").innerHTML = output['p2_tag'];
+                document.getElementById("p1score").innerHTML = output['p1_score'];
+                document.getElementById("p2score").innerHTML = output['p2_score'];
+                document.getElementById("centertext").innerHTML = output['center_text'];
+                document.getElementById("customstyle").href = "/static/".concat(output['style']).concat('?{%now "U"%}');
+                document.getElementById("scorecache").value = output_json;
+
+        }
+        async function animateTextChange(output) {
+                let wrapper = document.getElementById("wrapper")
+                let fullblocks = document.querySelectorAll('.fullblock');
+                wrapper.classList.remove("up");
+                wrapper.classList.add("moveup");
+                setTimeout(() => {
+                        wrapper.classList.remove("moveup");
+                }, 1000);
+                for (var i = 0; i<fullblocks.length; i++) {
+                        fullblocks[i].classList.remove("grow");
+                        fullblocks[i].classList.add("shrink");
+                }
+                setTimeout(() => {
+                        updateScores(output);
+                        for (var i = 0; i<fullblocks.length; i++) {
+                                fullblocks[i].classList.remove("shrink");
+                                fullblocks[i].classList.add("grow");
+                        }
+                }, 1000);
+        }
 </script>
