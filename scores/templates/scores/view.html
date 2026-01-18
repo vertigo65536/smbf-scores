@@ -56,20 +56,18 @@
                         const cache_json = document.getElementById("scorecache").value;
                         var cache = JSON.parse(cache_json);
                         output_json = JSON.stringify(output);
-                        if (output_json != cache) {
+                        if (output_json != cache_json) {
                                 if (cache_json != "{}") {
-                                        var animation_check = 1
                                         for (const[key,value] of Object.entries(output)){
                                                 if (cache[key] != value) {
-                                                        if (key != 'p1_score' && key !='p2_score') {
-                                                                animation_check = 2;
+                                                        if (key == 'p1_score') {
+                                                                animateScoreChange(output, 'p1score');
+                                                        } else if (key == 'p2_score') {
+                                                                animateScoreChange(output, 'p2score');
+                                                        } else {
+                                                                animateTextChange(output);
                                                         }
                                                 }
-                                        }
-                                        if (animation_check == 2) {
-                                                animateTextChange(output);
-                                        } else {
-                                                updateScores(output);
                                         }
                                 } else {
                                         updateScores(output);
@@ -85,7 +83,7 @@
                 document.getElementById("p2score").innerHTML = output['p2_score'];
                 document.getElementById("centertext").innerHTML = output['center_text'];
                 document.getElementById("customstyle").href = "/static/css/".concat(output['style']).concat('?{%now "U"%}');
-                document.getElementById("scorecache").value = output_json;
+                document.getElementById("scorecache").value = JSON.stringify(output);
 
         }
         async function animateTextChange(output) {
@@ -111,5 +109,17 @@
                 } else {
                         updateScores(output);
                 }
+        }
+        function animateScoreChange(output, scoreId) {
+                let scoreblock = document.getElementById(scoreId);
+                scoreblock.classList.add("scoreup");
+                setTimeout(() => {
+                        updateScores(output);
+                        scoreblock.classList.remove("scoreup");
+                        scoreblock.classList.add("scoredown");
+                }, 200);
+                setTimeout(() => {
+                        scoreblock.classList.remove("scoredown");
+                }, 300);
         }
 </script>

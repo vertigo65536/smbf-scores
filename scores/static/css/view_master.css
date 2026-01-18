@@ -118,3 +118,14 @@ body {
         padding-left: 17px;
         padding-right: 17px;
 }
+#p1score, #p2score {
+        transition: transform 0.2s ease-in-out;
+}
+.scoreup {
+        transform: translateY(-100px) !important;
+}
+.scoredown {
+        transform: translateY(50px) !important;
+        transition: none !important;
+}
+
