@@ -8,4 +8,5 @@ urlpatterns = [
     path("updatescores/", views.updatescores, name="updatescores"),
     path("getslug/", views.getslug, name="getslug"),
     path("getsets/", views.getsets, name="getsets"),
+    path("togglehidden/", views.togglehidden, name="togglehidden"),
 ]

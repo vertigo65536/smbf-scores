@@ -1,0 +1,26 @@
+.centertextblock{
+        height:30px !important;
+        margin: 0 43% 0 43% !important;
+        font-size: 15px;
+}
+.fullblock {
+        height: 65px !important;
+}
+.text {
+        font-size: 25px !important;
+}
+.p1.fullblock{
+        left: 17.8% !important;
+}
+.p2.fullblock{
+        right: 17.8% !important;
+}
+.grow {
+        width: 500px !important;
+}
+.text {
+        filter: url('#pixelate')
+}
+#centertext {
+        filter: url('#pixelate');
+}

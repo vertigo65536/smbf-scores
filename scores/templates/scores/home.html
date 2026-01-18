@@ -1,3 +1,14 @@
+<style>
+        body {
+                background: #13141a;
+                color: white;
+        }
+        input, select{
+                background: #13141a;
+                color: white;
+        }
+</style>
+<body>
 <div style="width: 270px">
         {% if secret == none %}
                 <form id="secret_form" action"{% url 'home' %}" method="post">{% csrf_token %}
@@ -40,6 +51,7 @@
                 <button id="swap">Swap</button>
                 <button id="update" >Update</button>
                 <button id="refresh">Refresh Matches</button>
+                <button id="toggle">Toggle Hidden</button>
                 <br />
                 <a href="{% url 'view' %}?s={{secret}}", target="_blank">View Overlay</a>
                 <script type="text/javascript">
@@ -70,7 +82,6 @@
                                         fetch('{% url "getsets" %}?e='.concat(event_data[0]))
                                         .then(result => result.json())
                                         .then((output) => {
-                                                console.log(output);
                                                 let option_options = document.getElementById("match").options;
                                                 for (i = option_options.length-1; i>= 0; i--) {
                                                         option_options.remove(i)
@@ -111,6 +122,7 @@
                                 document.getElementById("p1Name").value = p2name;
                                 document.getElementById("p2Team").value = p1team;
                                 document.getElementById("p2Name").value = p1name;
+                                updateScores();
                         });
                         document.getElementById("update").addEventListener("click", updateScores);
                         document.getElementById("p1Score").addEventListener("input", updateScores);
@@ -130,14 +142,12 @@
                                 for (const [key, value] of Object.entries(elements)) {
                                         postData[key] = document.getElementById(value).value;
                                 }
-                                console.log(postData)
                                 if (postData['p1_score'] == "") {
                                         postData['p1_score'] = 0;
                                 }
                                 if (postData['p2_score'] == "") {
                                         postData['p2_score'] = 0;
                                 }
-                                console.log(postData);
                                 fetch("{% url 'updatescores'%}", {
                                         method: "POST",
                                         headers: {
@@ -151,6 +161,10 @@
                                         console.log(response);
                                 });
                         };
+                        document.getElementById("toggle").addEventListener("click", function() {
+                                fetch("{% url 'togglehidden' %}?s={{secret}}");
+                        });
                 </script>
         {%endif%}
 </div>
+</body>

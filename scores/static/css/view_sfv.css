@@ -1,0 +1,19 @@
+body {
+  font-family: 'Comic Sans MS', cursive !important;
+}
+.centertextblock{
+        height: 40px !important;
+        margin: 0 34% 0 34% !important;
+}
+.fullblock {
+        height: 83px !important;
+}
+.grow {
+        width: 670px !important;
+}
+.p1.fullblock {
+        left: 7.8% !important;
+}
+.p2.fullblock {
+        right: 7.8% !important;
+}

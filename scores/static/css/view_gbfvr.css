@@ -1,0 +1,24 @@
+.centertextblock{
+        height: 30px !important;
+        margin: 0 34% 0 34% !important;
+}
+.fullblock {
+        height: 70px !important;
+}
+.p1.fullblock {
+        -webkit-transform: skew(30deg);
+        left: 9.1% !important;
+}
+.p2.fullblock {
+        -webkit-transform: skew(-30deg);
+        right: 9.1% !important;
+}
+.p1.text {
+        -webkit-transform: skew(-30deg);
+}
+.p2.text {
+        -webkit-transform: skew(30deg);
+}
+.grow {
+        width: 540px !important;
+}

@@ -76,10 +76,12 @@ def updatescores(request):
                 if key not in valid_fields:
                     del post_data[key]
             try:
+                post_data['hidden'] = 0
                 Score.objects.create(**post_data)
             except:
                 secret = post_data['secret']
                 del post_data['secret']
+                post_data.pop('hidden', None)
                 Score.objects.filter(secret=secret).update(**post_data)
         except:
             response.status_code = 500            
@@ -87,3 +89,18 @@ def updatescores(request):
     else:
         return HttpResponse("Only accepts POST data")
 
+def togglehidden(request):
+    response = HttpResponse()
+    response.status_code = 200
+    s = request.GET.get("s")
+    try:
+        query = Score.objects.get(secret=s)
+        print(query.hidden)
+        if query.hidden == True:
+            query.hidden = False
+        else:
+            query.hidden = True
+        query.save()
+    except:
+        response.status_code=500
+    return response
