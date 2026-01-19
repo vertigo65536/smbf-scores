@@ -1,14 +1,14 @@
 .p1.fullblock {
-        transform: skew(40deg);
+        -webkit-transform: skew(40deg);
 }
 .p1.text {
-        transform: skew(-40deg);
+        -webkit-transform: skew(-40deg);
 }
 .p2.fullblock {
-        transform: skew(-40deg);
+        -webkit-transform: skew(-40deg);
 }
 .p2.text {
-        transform: skew(40deg);
+        -webkit-transform: skew(40deg);
 }
 
 .centertextblock{

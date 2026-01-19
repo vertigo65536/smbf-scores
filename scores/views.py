@@ -47,9 +47,8 @@ def getsets(request):
     if sets != None:
         set_list = {}
         for match in sets:
-            if match['state'] not in [1,2] or match['p1name'] == None or match['p2name'] == None:
-                continue
-            print(match)
+            #if match['state'] not in [1,2] or match['p1name'] == None or match['p2name'] == None:
+            #    continue
             set_list[match['p1name'] + " vs " + match['p2name']] = {
                     'p1Prefix': match['p1prefix'],
                     'p1Name': match['p1name'],
@@ -57,7 +56,6 @@ def getsets(request):
                     'p2Name': match['p2name'],
                     'roundText': match['fullRoundText'],
             }
-        print(set_list)
         return HttpResponse(json.dumps(set_list), content_type="application/json")
 
 def updatescores(request):
@@ -95,7 +93,6 @@ def togglehidden(request):
     s = request.GET.get("s")
     try:
         query = Score.objects.get(secret=s)
-        print(query.hidden)
         if query.hidden == True:
             query.hidden = False
         else:
