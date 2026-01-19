@@ -47,8 +47,8 @@ def getsets(request):
     if sets != None:
         set_list = {}
         for match in sets:
-            #if match['state'] not in [1,2] or match['p1name'] == None or match['p2name'] == None:
-            #    continue
+            if match['state'] not in [1,2] or match['p1name'] == None or match['p2name'] == None:
+                continue
             set_list[match['p1name'] + " vs " + match['p2name']] = {
                     'p1Prefix': match['p1prefix'],
                     'p1Name': match['p1name'],
