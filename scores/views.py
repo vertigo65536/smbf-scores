@@ -46,6 +46,7 @@ def getslug(request):
             events = gg.tournament.get_events(tourney_id)
             for event in events:
                 event_list[event['name']] = {'id': event['id'], 'game': event['videogame']}
+            print(event_list)
         return HttpResponse(json.dumps(event_list), content_type="application/json")
 
 def getsets(request):

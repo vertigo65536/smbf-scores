@@ -1,0 +1,42 @@
+.p1.fullblock {
+        -webkit-transform: skew(40deg);
+}
+.p1.text {
+        -webkit-transform: skew(-40deg);
+}
+.p2.fullblock {
+        -webkit-transform: skew(-40deg);
+}
+.p2.text {
+        -webkit-transform: skew(40deg);
+}
+
+.centertextblock{
+        height: 40px !important;
+        margin: 0 35% 0 35% !important;
+}
+.fullblock {
+        height: 90px !important;
+}
+.p1.fullblock {
+        left: 4.8%;
+}
+.p2.fullblock {
+        right: 5.1%;
+}
+.grow {
+        width: 700px !important;
+}
+.p1.fullblock {
+        -webkit-transform: skew(35deg);
+}
+.p2.fullblock {
+        -webkit-transform: skew(-35deg);
+}
+.p1.text {
+        -webkit-transform: skew(-35deg);
+}
+.p2.text {
+        -webkit-transform: skew(35deg);
+}
+
