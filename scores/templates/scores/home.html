@@ -186,7 +186,7 @@
                         });
                         document.getElementById("flash-banner")
                                 .addEventListener("click", function flashBanner() {
-                                         fetch("{% url 'updatescores'%}", {
+                                         fetch("{% url 'updatescores'%}".concat("?t=scores"), {
                                                 method: "POST",
                                                 headers: {
                                                         'Accept': 'application/json',

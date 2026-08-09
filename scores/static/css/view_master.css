@@ -155,10 +155,10 @@ body {
         transition: none !important;
 }
 .bannerIn {
-        animation: zoom-in 1.5s ease;
+        animation: zoom-in 1s ease;
 }
 .bannerOut {
-        animation: zoom-out 1s ease;
+        animation: zoom-out 0.5s ease;
 }
 .hidden {
         scale: 0%;
@@ -167,7 +167,7 @@ body {
         0% {
                 scale: 0%;
         }
-        50% {
+        65% {
                 scale: 150%;
         }
         100% {
