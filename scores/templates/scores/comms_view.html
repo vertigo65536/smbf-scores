@@ -1,17 +1,18 @@
 {% load static %}
 <head>
         <link rel="stylesheet" href="{% static 'css/comms_view_master.css'%}?{%now "U"%}">
+        <link id="sodiumstyle" rel="stylesheet" href="">
 </head>
 <body>
         <div id="wrapper">
                 <div class="commsblock">
                         <table class="name-table">
                                 <tr>
-                                        <td class="name-row text-row left">Test Name</td>
+                                        <td id="p1name" class="name-row text-row left">Test Name</td>
                                         <td class="accent-row" rowspan="2">     </td>
                                 </tr>
                                 <tr>
-                                        <td class="sm-row text-row left">@Test Twitter</td>
+                                        <td id="p1sm" class="sm-row text-row left">@Test Twitter</td>
                                 </tr>
                         </table>
                 </div>
@@ -19,13 +20,62 @@
                         <table class="name-table">
                                 <tr>
                                         <td class="accent-row" rowspan="2">     </td>
-                                        <td class="name-row text-row right">Test Name</td>
+                                        <td id="p2name" class="name-row text-row right">Test Name</td>
                                 </tr>
                                 <tr>
-                                        <td class="sm-row text-row right">@Test Twitter</td>
+                                        <td id="p2sm" class="sm-row text-row right">@Test Twitter</td>
                                 </tr>
                         </table>
 
                 </div>
         </div>
+        <input type="hidden" id="scorecache" value="{}"></input>
 </body>
+<script>
+        setInterval(() => fetch("{% url 'rawview' %}?s={{secret}}&t=comms")
+                .then(result => result.json())
+                .then((output) => {
+                        const cache_json = document.getElementById("scorecache").value;
+                        var cache = JSON.parse(cache_json);
+                        output_json = JSON.stringify(output);
+                        if (output_json != cache_json) {
+                                if (cache_json != "{}") {
+                                        for (const[key,value] of Object.entries(output)){
+                                                if (cache[key] != value) {
+                                                        animateTextChange(output);
+                                                }
+                                        }
+                                } else {
+                                        updateScores(output);
+                                }
+                        }
+                }), 1000);
+
+        function updateScores(output) {
+                document.getElementById("p1name").innerHTML = output['p1_name'];
+                document.getElementById("p2name").innerHTML = output['p2_name'];
+                document.getElementById("p1sm").innerHTML = output['p1_sm'];
+                document.getElementById("p2sm").innerHTML = output['p2_sm'];
+                if (output['sodium'] == true) {
+                        document.getElementById("sodiumstyle").href = "/static/css/view_sodium.css".concat('?{%now "U"%}');
+                } else {
+                        document.getElementById("sodiumstyle").href = "";
+                }
+                document.getElementById("scorecache").value = JSON.stringify(output);
+
+        }
+        async function animateTextChange(output) {
+                let wrapper = document.getElementById("wrapper")
+                wrapper.classList.remove("down");
+                wrapper.classList.add("movedown");
+                if (output['hidden'] == false) {
+                        setTimeout(() => {
+                                updateScores(output);
+                                wrapper.classList.remove("movedown");
+                        }, 1000);
+                } else {
+                        updateScores(output);
+                }
+        }
+
+</script>

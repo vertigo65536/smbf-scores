@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.forms.models import model_to_dict
-from .models import Secret, Score, GameStyle
+from .models import Secret, Score, GameStyle, Comms
 import pystartgg
 import json
 
@@ -20,8 +20,13 @@ def commsview(request):
     return render(request, "scores/comms_view.html", {'secret': secret})
 
 def rawview(request):
+    response = HttpResponse()
     secret = request.GET.get("s")
-    query = model_to_dict(Score.objects.get(secret=secret))
+    t = request.GET.get("t")
+    db = getDBFromType(t)
+    if db == -1:
+        response.status_code=500
+    query = model_to_dict(db.objects.get(secret=secret))
     try:
         query['style'] = model_to_dict(GameStyle.objects.get(game=query['game']))['style']
     except:
@@ -65,12 +70,15 @@ def getsets(request):
 def updatescores(request):
     response = HttpResponse()
     response.status_code = 200
+    db = getDBFromType(request.GET.get("t"))
+    if db == -1:
+        response.status_code=500
     if request.method == 'POST':
         #try:
         post_data = json.loads(request.body)
         print(post_data)
         valid_fields = []
-        fields = Score._meta.get_fields()
+        fields = db._meta.get_fields()
         if 'secret' not in post_data.keys():
             return 500
         for field in fields:
@@ -80,12 +88,12 @@ def updatescores(request):
                 del post_data[key]
         try:
             post_data['hidden'] = 0
-            Score.objects.create(**post_data)
+            db.objects.create(**post_data)
         except:
             secret = post_data['secret']
             del post_data['secret']
             post_data.pop('hidden', None)
-            Score.objects.filter(secret=secret).update(**post_data)
+            db.objects.filter(secret=secret).update(**post_data)
         #except:
         #    response.status_code = 500            
         return response
@@ -96,8 +104,12 @@ def togglehidden(request):
     response = HttpResponse()
     response.status_code = 200
     s = request.GET.get("s")
+    t = request.GET.get("t")
+    db = getDBFromType(t)
+    if db == -1:
+        response.status_code=500
     try:
-        query = Score.objects.get(secret=s)
+        query = db.objects.get(secret=s)
         if query.hidden == True:
             query.hidden = False
         else:
@@ -106,3 +118,11 @@ def togglehidden(request):
     except:
         response.status_code=500
     return response
+
+def getDBFromType(t):
+    if t == "scores":
+        return Score
+    elif t == "comms":
+        return Comms
+    else:
+        return -1

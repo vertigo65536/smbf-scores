@@ -77,7 +77,7 @@
 </div>
 </body>
 <script>
-        setInterval(() => fetch("{% url 'rawview' %}?s={{secret}}")
+        setInterval(() => fetch("{% url 'rawview' %}?s={{secret}}&t=scores")
                 .then(result => result.json())
                 .then((output) => {
                         const cache_json = document.getElementById("scorecache").value;

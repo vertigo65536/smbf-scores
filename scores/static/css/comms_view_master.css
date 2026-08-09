@@ -13,6 +13,7 @@ body {
         justify-content: space-around;
         align-items: flex-end;
         align-content: flex-end;
+        transition: transform 0.5s ease-in-out;
 }
 .commsblock {
         width:600px;
@@ -45,3 +46,12 @@ body {
 .right {
         text-align: left;
 }
+.movedown {
+        transform: translateY(150px);
+        transition: transform 0.5s ease-in-out;
+}
+.down {
+        transform: translateY(150px);
+        transition: 0.5s ease-in-out;
+}
+
