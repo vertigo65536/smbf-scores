@@ -1,0 +1,47 @@
+@font-face {
+        font-family: Interceptor;
+        src: url('/static/fonts/Interceptor/Interceptor.otf') format("opentype");
+}
+body {
+        overflow-y: hidden;
+        font-family: Interceptor;
+}
+#wrapper{
+        width: 1920px;
+        height: 1080px;
+        display:flex;
+        justify-content: space-around;
+        align-items: flex-end;
+        align-content: flex-end;
+}
+.commsblock {
+        width:600px;
+        height: 100px;
+        background:black;
+        opacity: 95%;
+}
+.name-table {
+        height: 100%;
+        width: 100%;
+        color: white;
+}
+.text-row {
+        padding-left: 10px;
+        padding-right: 10px;
+}
+.name-row {
+        font-size: 40px;
+}
+.sm-row {
+        font-size: 20px;
+}
+.accent-row {
+        background:red;
+        width: 10px;
+}
+.left {
+        text-align: right;
+}
+.right {
+        text-align: left;
+}

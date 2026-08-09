@@ -15,6 +15,10 @@ def view(request):
     secret = request.GET.get("s")
     return render(request, "scores/view.html", {'secret': secret})
 
+def commsview(request):
+    secret = request.GET.get("s")
+    return render(request, "scores/comms_view.html", {'secret': secret})
+
 def rawview(request):
     secret = request.GET.get("s")
     query = model_to_dict(Score.objects.get(secret=secret))
@@ -62,27 +66,28 @@ def updatescores(request):
     response = HttpResponse()
     response.status_code = 200
     if request.method == 'POST':
+        #try:
+        post_data = json.loads(request.body)
+        print(post_data)
+        valid_fields = []
+        fields = Score._meta.get_fields()
+        if 'secret' not in post_data.keys():
+            return 500
+        for field in fields:
+            valid_fields.append(field.name)
+        for key, value in post_data.items():
+            if key not in valid_fields:
+                del post_data[key]
         try:
-            post_data = json.loads(request.body)
-            valid_fields = []
-            fields = Score._meta.get_fields()
-            if 'secret' not in post_data.keys():
-                return 500
-            for field in fields:
-                valid_fields.append(field.name)
-            for key, value in post_data.items():
-                if key not in valid_fields:
-                    del post_data[key]
-            try:
-                post_data['hidden'] = 0
-                Score.objects.create(**post_data)
-            except:
-                secret = post_data['secret']
-                del post_data['secret']
-                post_data.pop('hidden', None)
-                Score.objects.filter(secret=secret).update(**post_data)
+            post_data['hidden'] = 0
+            Score.objects.create(**post_data)
         except:
-            response.status_code = 500            
+            secret = post_data['secret']
+            del post_data['secret']
+            post_data.pop('hidden', None)
+            Score.objects.filter(secret=secret).update(**post_data)
+        #except:
+        #    response.status_code = 500            
         return response
     else:
         return HttpResponse("Only accepts POST data")

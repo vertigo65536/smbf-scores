@@ -1,0 +1,31 @@
+{% load static %}
+<head>
+        <link rel="stylesheet" href="{% static 'css/comms_view_master.css'%}?{%now "U"%}">
+</head>
+<body>
+        <div id="wrapper">
+                <div class="commsblock">
+                        <table class="name-table">
+                                <tr>
+                                        <td class="name-row text-row left">Test Name</td>
+                                        <td class="accent-row" rowspan="2">     </td>
+                                </tr>
+                                <tr>
+                                        <td class="sm-row text-row left">@Test Twitter</td>
+                                </tr>
+                        </table>
+                </div>
+                <div class="commsblock">
+                        <table class="name-table">
+                                <tr>
+                                        <td class="accent-row" rowspan="2">     </td>
+                                        <td class="name-row text-row right">Test Name</td>
+                                </tr>
+                                <tr>
+                                        <td class="sm-row text-row right">@Test Twitter</td>
+                                </tr>
+                        </table>
+
+                </div>
+        </div>
+</body>

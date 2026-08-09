@@ -16,6 +16,18 @@ class Score(models.Model):
     center_text = models.CharField(max_length=100)
     game = models.CharField(max_length=100)
     hidden = models.BooleanField()
+    title_card = models.BooleanField()
+    sodium = models.BooleanField()
+    banner_flash = models.IntegerField()
+
+class Comms(models.Model):
+    secret = models.CharField(max_length=100, primary_key = True)
+    p1_name = models.CharField(max_length=100)
+    p1_sm = models.CharField(max_length=100)
+    p2_name = models.CharField(max_length=100)
+    p2_sm = models.CharField(max_length=100)
+    hidden = models.BooleanField()
+    sodium = models.BooleanField()
 
 class GameStyle(models.Model):
     game = models.IntegerField(primary_key=True)

@@ -40,6 +40,7 @@ body {
 .text {
         opacity: 100%;
         font-size: 25px;
+        white-space: nowrap;
 }
 .p1.text {
         margin: auto;
@@ -121,6 +122,31 @@ body {
 #p1score, #p2score {
         transition: transform 0.2s ease-in-out;
 }
+.banner-flex {
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        background: black; 
+        height:60px;
+}
+.banner-content {
+        padding-right: 30px;
+        flex-grow:1;
+        flex-basis: 0;
+}
+.banner-table {
+        margin-left: auto;
+}
+.banner-name {
+        padding: 4px;
+        font-size: 50px
+}
+.banner-name.prefix {
+        float: left;
+}
+.banner-name.name {
+        float: right;
+}
 .scoreup {
         transform: translateY(-100px) !important;
 }
@@ -128,4 +154,32 @@ body {
         transform: translateY(50px) !important;
         transition: none !important;
 }
+.bannerIn {
+        animation: zoom-in 1.5s ease;
+}
+.bannerOut {
+        animation: zoom-out 1s ease;
+}
+.hidden {
+        scale: 0%;
+}
+@keyframes zoom-in {
+        0% {
+                scale: 0%;
+        }
+        50% {
+                scale: 150%;
+        }
+        100% {
+                scale: 100%;
+        }
+}
 
+@keyframes zoom-out {
+  100% {
+    scale: 100%;
+  }
+  100% {
+    scale: 0%;
+  }
+}

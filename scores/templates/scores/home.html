@@ -52,8 +52,12 @@
                 <button id="update" >Update</button>
                 <button id="refresh">Refresh Matches</button>
                 <button id="toggle">Toggle Hidden</button>
+                <input type="checkbox" id="sodium" name="sodium">
+                <label for="sodium">Sodium</label>
+                <button id="flash-banner">Flash Banner</button>
                 <br />
                 <a href="{% url 'view' %}?s={{secret}}", target="_blank">View Overlay</a>
+                <hr />
                 <script type="text/javascript">
                         document.getElementById("submit_slug").addEventListener("click", function() {
                                 const slug = document.getElementById("slug").value
@@ -127,6 +131,7 @@
                         document.getElementById("update").addEventListener("click", updateScores);
                         document.getElementById("p1Score").addEventListener("input", updateScores);
                         document.getElementById("p2Score").addEventListener("input", updateScores);
+                        document.getElementById("sodium").addEventListener("click", updateScores);
                         function updateScores() {
                                 var postData = {'secret': "{{secret}}"}
                                 const elements = {
@@ -137,10 +142,15 @@
                                         "p1_score": "p1Score",
                                         "p2_score": "p2Score",
                                         "center_text": "centerText",
-                                        "game": "game"
+                                        "game": "game",
+                                        "sodium": "sodium"
                                 };
                                 for (const [key, value] of Object.entries(elements)) {
-                                        postData[key] = document.getElementById(value).value;
+                                        if (key == "sodium") {
+                                                postData[key] = document.getElementById(value).checked
+                                        } else {
+                                                postData[key] = document.getElementById(value).value;
+                                        }
                                 }
                                 if (postData['p1_score'] == "") {
                                         postData['p1_score'] = 0;
@@ -163,6 +173,21 @@
                         };
                         document.getElementById("toggle").addEventListener("click", function() {
                                 fetch("{% url 'togglehidden' %}?s={{secret}}");
+                        });
+                        document.getElementById("flash-banner")
+                                .addEventListener("click", function flashBanner() {
+                                         fetch("{% url 'updatescores'%}", {
+                                                method: "POST",
+                                                headers: {
+                                                        'Accept': 'application/json',
+                                                        'X-CSRFToken': '{{csrf_token}}',
+                                                        'Content-Type': 'application/json'
+                                                },
+                                                 body: JSON.stringify({"secret": "{{secret}}", "banner_flash": Date.now()}),
+                                        })
+                                        .then( (response) => {
+                                                console.log(response);
+                                        });                              
                         });
                 </script>
         {%endif%}

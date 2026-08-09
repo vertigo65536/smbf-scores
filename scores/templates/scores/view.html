@@ -1,6 +1,7 @@
 {% load static %}
 <head>
         <link rel="stylesheet" href="{% static 'css/view_master.css'%}?{%now "U"%}">
+        <link id="sodiumstyle" rel="stylesheet" href="">
         <link id="customstyle" rel="stylesheet" href="">
 <svg>
     <filter id="pixelate" x="0" y="0" width="100%" height="100%">
@@ -48,6 +49,32 @@
         </div>
 </div>
 <input type="hidden" id="scorecache" value="{}"></input>
+<div style="height: 600px">
+</div>
+<div id="banner" class="banner hidden">
+        <div class="banner-flex">
+                <div class="banner-content">
+                        <table class="banner-table">
+                                <tr>
+                                        <td class="banner-name text prefix" id="p1prefixbanner"></td>
+                                        <td class="banner-name text name" id="p1namebanner"></td>
+                                </tr>
+                        </table>
+                </div>
+                <div class="text name" style="font-size: 150px;">VS</div>
+                <div style="padding-left: 30px; flex-grow:1; flex-basis: 0;">
+                        <table>
+                                <tr>
+                                        <td class="banner-name text prefix" id="p2prefixbanner"></td>
+                                        <td class="banner-name text name" id="p2namebanner"></td>
+                                </tr>
+                        </table>
+                </div>
+        </div>
+        <div style="width: 100%; padding-top: 20px">
+                <div style="font-size:50px; text-align: center" class="text name" id="centertextbanner"></div>
+        </div>
+</div>
 </body>
 <script>
         setInterval(() => fetch("{% url 'rawview' %}?s={{secret}}")
@@ -64,8 +91,10 @@
                                                                 animateScoreChange(output, 'p1score');
                                                         } else if (key == 'p2_score') {
                                                                 animateScoreChange(output, 'p2score');
-                                                        } else {
+                                                        } else if (key != 'banner_flash') {
                                                                 animateTextChange(output);
+                                                        } else {
+                                                                flashBanner(output);
                                                         }
                                                 }
                                         }
@@ -79,10 +108,20 @@
                 document.getElementById("p2name").innerHTML = output['p2_name'];
                 document.getElementById("p1prefix").innerHTML = output['p1_tag'];
                 document.getElementById("p2prefix").innerHTML = output['p2_tag'];
+                document.getElementById("p1namebanner").innerHTML = output['p1_name'];
+                document.getElementById("p2namebanner").innerHTML = output['p2_name'];
+                document.getElementById("p1prefixbanner").innerHTML = output['p1_tag'];
+                document.getElementById("p2prefixbanner").innerHTML = output['p2_tag'];
+                document.getElementById("centertextbanner").innerHTML = output['center_text'];
                 document.getElementById("p1score").innerHTML = output['p1_score'];
                 document.getElementById("p2score").innerHTML = output['p2_score'];
                 document.getElementById("centertext").innerHTML = output['center_text'];
                 document.getElementById("customstyle").href = "/static/css/".concat(output['style']).concat('?{%now "U"%}');
+                if (output['sodium'] == true) {
+                        document.getElementById("sodiumstyle").href = "/static/css/view_sodium.css".concat('?{%now "U"%}');
+                } else {
+                        document.getElementById("sodiumstyle").href = "";
+                }
                 document.getElementById("scorecache").value = JSON.stringify(output);
 
         }
@@ -121,5 +160,20 @@
                 setTimeout(() => {
                         scoreblock.classList.remove("scoredown");
                 }, 300);
+        }
+        function flashBanner(output) {
+                updateScores(output);
+                let banner = document.getElementById("banner");
+                banner.classList.remove("hidden");
+                banner.classList.remove("bannerOut");
+                banner.classList.add("bannerIn");
+                setTimeout(() => {
+                        banner.classList.remove("bannerIn");
+                        banner.classList.add("bannerOut");
+                }, 4000);
+                setTimeout(() => {
+                        banner.classList.remove("bannerOut");
+                        banner.classList.add("hidden");
+                }, 5000);
         }
 </script>
